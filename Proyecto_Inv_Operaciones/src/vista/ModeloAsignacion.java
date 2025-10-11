@@ -27,7 +27,39 @@ public class ModeloAsignacion extends javax.swing.JPanel {
 
     public ModeloAsignacion() {
         initComponents();
+         // 🔹 Renderizador que colorea los ceros en rojo
+    DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            // Restaurar colores base
+            if (isSelected) {
+                c.setBackground(table.getSelectionBackground());
+                c.setForeground(table.getSelectionForeground());
+            } else {
+                c.setBackground(Color.WHITE);
+                c.setForeground(Color.BLACK);
+            }
+
+            // Si el valor es 0, pintarlo en rojo
+            if (value != null) {
+                String texto = value.toString().trim();
+                if (texto.equals("0") || texto.equals("0.0") || texto.equals("0.00")) {
+                    c.setForeground(Color.RED);
+                }
+            }
+
+            return c;
+        }
+    };
+
+    // Aplicar el renderizador a TODAS las columnas de la tabla
+    tblDatos.setDefaultRenderer(Object.class, renderer);
     }
+    
 
 //    private double parseNumero(Object valor) {
 //        if (valor == null) {
