@@ -230,256 +230,248 @@ public class MetodoAproVogel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
-      try {
-        
-        JTable tblDatos = this.tblDatos;            
-        javax.swing.JTextArea txtResultadosArea = this.Resultados; 
-        javax.swing.JTextField txtCostoTotal = this.txtRespuesta; 
-        // ------------------------------------------------------------
+   try {
 
-        DefaultTableModel model = (DefaultTableModel) tblDatos.getModel();
-        int rows = model.getRowCount();
-        int cols = model.getColumnCount();
+    JTable tblDatos = this.tblDatos;            
+    javax.swing.JTextArea txtResultadosArea = this.Resultados; 
+    javax.swing.JTextField txtCostoTotal = this.txtRespuesta; 
 
-        if (cols < 3) {
-            JOptionPane.showMessageDialog(this, "La tabla parece tener pocas columnas. Debe tener: [Nombre] [D1..Dn] [Oferta].");
-            return;
-        }
+    DefaultTableModel model = (DefaultTableModel) tblDatos.getModel();
+    int rows = model.getRowCount();
+    int cols = model.getColumnCount();
 
-        // Detectar si la última fila es la fila "Demanda"
-        boolean hasDemandRow = false;
-        Object lastRowFirstColObj = model.getValueAt(rows - 1, 0);
-        if (lastRowFirstColObj != null) {
-            String s = lastRowFirstColObj.toString().toLowerCase(Locale.ROOT);
-            if (s.contains("demanda") || s.contains("deman")) hasDemandRow = true;
-        }
-
-        if (!hasDemandRow) {
-            JOptionPane.showMessageDialog(this, "No se encontró la fila 'Demanda'. Asegúrate de que la última fila tenga la etiqueta 'Demanda' en la primera columna.");
-            return;
-        }
-
-        int m = rows - 1;           // número de suministros (filas), excluyendo la fila Demanda
-        int n = cols - 2;           // número de demandas (columnas), excluyendo col 0 (nombres) y última columna (Oferta)
-        if (m <= 0 || n <= 0) {
-            JOptionPane.showMessageDialog(this, "Dimensiones inválidas en la tabla.");
-            return;
-        }
-
-        // ----- Leer nombres de filas y columnas -----
-        String[] rowNames = new String[m];
-        for (int i = 0; i < m; i++) {
-            Object o = model.getValueAt(i, 0);
-            rowNames[i] = (o == null || o.toString().trim().isEmpty()) ? ("Suministro " + (i + 1)) : o.toString().trim();
-        }
-        String[] colNames = new String[n];
-        for (int j = 0; j < n; j++) {
-            String hdr = model.getColumnName(j + 1);
-            colNames[j] = (hdr == null || hdr.trim().isEmpty()) ? ("D" + (j + 1)) : hdr;
-        }
-
-        // ----- Leer la matriz de costos -----
-        double[][] costs = new double[m][n];
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                Object val = model.getValueAt(i, j + 1);
-                String s = (val == null) ? "" : val.toString().trim();
-                if (s.isEmpty()) {
-                    throw new NumberFormatException("Celda vacía en fila " + (i + 1) + ", columna " + (j + 1));
-                }
-                s = s.replace(",", ".");
-                costs[i][j] = Double.parseDouble(s);
-            }
-        }
-
-        // ----- Leer ofertas (supply) -----
-        double[] supply = new double[m];
-        for (int i = 0; i < m; i++) {
-            Object val = model.getValueAt(i, cols - 1);
-            String s = (val == null) ? "" : val.toString().trim();
-            if (s.isEmpty()) {
-                throw new NumberFormatException("Oferta (fila " + (i + 1) + ") vacía.");
-            }
-            s = s.replace(",", ".");
-            supply[i] = Double.parseDouble(s);
-        }
-
-        // ----- Leer demandas (demand) desde la última fila -----
-        double[] demand = new double[n];
-        for (int j = 0; j < n; j++) {
-            Object val = model.getValueAt(rows - 1, j + 1);
-            String s = (val == null) ? "" : val.toString().trim();
-            if (s.isEmpty()) {
-                throw new NumberFormatException("Demanda en columna " + (j + 1) + " vacía.");
-            }
-            s = s.replace(",", ".");
-            demand[j] = Double.parseDouble(s);
-        }
-
-        // ----- Balanceo automático: agregar fila o columna dummy si no cuadra oferta y demanda -----
-        double totalSupply = 0;
-        double totalDemand = 0;
-        for (double x : supply) totalSupply += x;
-        for (double x : demand) totalDemand += x;
-
-        boolean addedDummyRow = false, addedDummyCol = false;
-
-        if (Math.abs(totalSupply - totalDemand) > 1e-8) {
-            if (totalSupply > totalDemand) {
-                // --- Caso: la oferta > demanda -> agregar columna dummy ---
-                int newN = n + 1;
-                double[][] newCosts = new double[m][newN];
-                for (int i = 0; i < m; i++) {
-                    System.arraycopy(costs[i], 0, newCosts[i], 0, n);
-                    newCosts[i][n] = 0.0; // costo 0 para columna dummy
-                }
-                double[] newDemand = new double[newN];
-                System.arraycopy(demand, 0, newDemand, 0, n);
-                newDemand[n] = totalSupply - totalDemand; // cantidad faltante
-                costs = newCosts;
-                demand = newDemand;
-                colNames = Arrays.copyOf(colNames, newN);
-                colNames[newN - 1] = "Demanda_nueva";
-                n = newN;
-                addedDummyCol = true;
-            } else {
-                // --- Caso: la demanda > oferta -> agregar fila dummy ---
-                int newM = m + 1;
-                double[][] newCosts = new double[newM][n];
-                for (int i = 0; i < m; i++) System.arraycopy(costs[i], 0, newCosts[i], 0, n);
-                for (int j = 0; j < n; j++) newCosts[m][j] = 0.0; // costo 0 para fila dummy
-                double[] newSupply = new double[newM];
-                System.arraycopy(supply, 0, newSupply, 0, m);
-                newSupply[m] = totalDemand - totalSupply; // cantidad faltante
-                costs = newCosts;
-                supply = newSupply;
-                rowNames = Arrays.copyOf(rowNames, newM);
-                rowNames[newM - 1] = " DF";
-                m = newM;
-                addedDummyRow = true;
-            }
-        }
-
-        // ----- VAM
-        double[][] allocation = new double[m][n];
-        boolean[] rowDone = new boolean[m];
-        boolean[] colDone = new boolean[n];
-
-        double totalCost = 0.0;
-        int remainingRows = m;
-        int remainingCols = n;
-        final double EPS = 1e-8;
-
-        while (remainingRows > 0 && remainingCols > 0) {
-            // --- calcular penalizaciones filas ---
-            double[] rowPenalty = new double[m];
-            Arrays.fill(rowPenalty, -1.0);
-            for (int i = 0; i < m; i++) {
-                if (rowDone[i]) continue;
-                double min1 = Double.POSITIVE_INFINITY, min2 = Double.POSITIVE_INFINITY;
-                for (int j = 0; j < n; j++) {
-                    if (colDone[j]) continue;
-                    double c = costs[i][j];
-                    if (c < min1) { min2 = min1; min1 = c; }
-                    else if (c < min2) { min2 = c; }
-                }
-                if (min1 == Double.POSITIVE_INFINITY) rowPenalty[i] = -1;
-                else if (min2 == Double.POSITIVE_INFINITY) rowPenalty[i] = min1;
-                else rowPenalty[i] = min2 - min1;
-            }
-
-            // --- calcular penalizaciones columnas ---
-            double[] colPenalty = new double[n];
-            Arrays.fill(colPenalty, -1.0);
-            for (int j = 0; j < n; j++) {
-                if (colDone[j]) continue;
-                double min1 = Double.POSITIVE_INFINITY, min2 = Double.POSITIVE_INFINITY;
-                for (int i = 0; i < m; i++) {
-                    if (rowDone[i]) continue;
-                    double c = costs[i][j];
-                    if (c < min1) { min2 = min1; min1 = c; }
-                    else if (c < min2) { min2 = c; }
-                }
-                if (min1 == Double.POSITIVE_INFINITY) colPenalty[j] = -1;
-                else if (min2 == Double.POSITIVE_INFINITY) colPenalty[j] = min1;
-                else colPenalty[j] = min2 - min1;
-            }
-
-            // --- seleccionar fila o columna con mayor penalización ---
-            double bestPenalty = -1;
-            boolean chooseRow = true;
-            int idx = -1;
-            for (int i = 0; i < m; i++) {
-                if (rowDone[i]) continue;
-                if (rowPenalty[i] > bestPenalty) { bestPenalty = rowPenalty[i]; chooseRow = true; idx = i; }
-            }
-            for (int j = 0; j < n; j++) {
-                if (colDone[j]) continue;
-                if (colPenalty[j] > bestPenalty) { bestPenalty = colPenalty[j]; chooseRow = false; idx = j; }
-            }
-            if (idx == -1) break;
-
-            int selRow = -1, selCol = -1;
-            if (chooseRow) {
-                selRow = idx;
-                double minCost = Double.POSITIVE_INFINITY;
-                for (int j = 0; j < n; j++) {
-                    if (colDone[j]) continue;
-                    if (costs[selRow][j] < minCost) { minCost = costs[selRow][j]; selCol = j; }
-                }
-            } else {
-                selCol = idx;
-                double minCost = Double.POSITIVE_INFINITY;
-                for (int i = 0; i < m; i++) {
-                    if (rowDone[i]) continue;
-                    if (costs[i][selCol] < minCost) { minCost = costs[i][selCol]; selRow = i; }
-                }
-            }
-
-            if (selRow == -1 || selCol == -1) break;
-
-            // --- asignar cantidad mínima disponible ---
-            double q = Math.min(supply[selRow], demand[selCol]);
-            allocation[selRow][selCol] += q;
-            totalCost += q * costs[selRow][selCol];
-            supply[selRow] -= q;
-            demand[selCol] -= q;
-
-            if (Math.abs(supply[selRow]) < EPS && !rowDone[selRow]) { rowDone[selRow] = true; remainingRows--; }
-            if (Math.abs(demand[selCol]) < EPS && !colDone[selCol]) { colDone[selCol] = true; remainingCols--; }
-        }
-
-        // ----- Construir texto de salida -----
-        StringBuilder sb = new StringBuilder();
-        Resultados.append("\n");
-        //sb.append(     "RESUL \n\n");
-        //sb.append(String.format(    "Asignación:\n\n"));
-
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (allocation[i][j] > 0.0) {
-                    sb.append(String.format("%s -> %s = %.1f * %.1f  subtotal = %.1f\n",
-                            rowNames[i], colNames[j], allocation[i][j], costs[i][j], allocation[i][j] * costs[i][j]));
-                }
-            }
-        }
-
-        sb.append("\\n");
-        
-        //sb.append(String.format("Costo total: %.2f\n", totalCost));
-        if (addedDummyCol || addedDummyRow) {
-            sb.append("\n Se balanceó para igualar la oferta y demanda\n");
-        }
-
-        if (txtResultadosArea != null) txtResultadosArea.setText(sb.toString());
-        else JOptionPane.showMessageDialog(this, sb.toString());
-        if (txtCostoTotal != null) txtCostoTotal.setText(String.format("%.1f", totalCost));
-
-    } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, "Error al leer valores numéricos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(this, "Error al calcular Método de Aproximación de Vogel: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    if (cols < 3) {
+        JOptionPane.showMessageDialog(this, "La tabla parece tener pocas columnas. Debe tener: [Nombre] [D1..Dn] [Oferta].");
+        return;
     }
+
+    // Detectar si la última fila es la fila "Demanda"
+    boolean hasDemandRow = false;
+    Object lastRowFirstColObj = model.getValueAt(rows - 1, 0);
+    if (lastRowFirstColObj != null) {
+        String s = lastRowFirstColObj.toString().toLowerCase(Locale.ROOT);
+        if (s.contains("demanda") || s.contains("deman")) hasDemandRow = true;
+    }
+
+    if (!hasDemandRow) {
+        JOptionPane.showMessageDialog(this, "No se encontró la fila 'Demanda'. Asegúrate de que la última fila tenga la etiqueta 'Demanda' en la primera columna.");
+        return;
+    }
+
+    int m = rows - 1;           // número de suministros (filas), excluyendo la fila Demanda
+    int n = cols - 2;           // número de demandas (columnas), excluyendo col 0 (nombres) y última columna (Oferta)
+    if (m <= 0 || n <= 0) {
+        JOptionPane.showMessageDialog(this, "Dimensiones inválidas en la tabla.");
+        return;
+    }
+
+    // ----- Leer nombres de filas ----- 
+    // FORZAMOS S1, S2, S3 ...
+    String[] rowNames = new String[m];
+    for (int i = 0; i < m; i++) {
+        rowNames[i] = "S" + (i + 1);
+    }
+
+    // ----- Leer nombres de columnas -----
+    String[] colNames = new String[n];
+    for (int j = 0; j < n; j++) {
+        String hdr = model.getColumnName(j + 1);
+        colNames[j] = (hdr == null || hdr.trim().isEmpty()) ? ("D" + (j + 1)) : hdr;
+    }
+
+    // ----- Leer la matriz de costos -----
+    double[][] costs = new double[m][n];
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            Object val = model.getValueAt(i, j + 1);
+            String s = (val == null) ? "" : val.toString().trim();
+            if (s.isEmpty()) throw new NumberFormatException("Celda vacía en fila " + (i + 1) + ", columna " + (j + 1));
+            s = s.replace(",", ".");
+            costs[i][j] = Double.parseDouble(s);
+        }
+    }
+
+    // ----- Leer ofertas (supply) -----
+    double[] supply = new double[m];
+    for (int i = 0; i < m; i++) {
+        Object val = model.getValueAt(i, cols - 1);
+        String s = (val == null) ? "" : val.toString().trim();
+        if (s.isEmpty()) throw new NumberFormatException("Oferta (fila " + (i + 1) + ") vacía.");
+        s = s.replace(",", ".");
+        supply[i] = Double.parseDouble(s);
+    }
+
+    // ----- Leer demandas (demand) desde la última fila -----
+    double[] demand = new double[n];
+    for (int j = 0; j < n; j++) {
+        Object val = model.getValueAt(rows - 1, j + 1);
+        String s = (val == null) ? "" : val.toString().trim();
+        if (s.isEmpty()) throw new NumberFormatException("Demanda en columna " + (j + 1) + " vacía.");
+        s = s.replace(",", ".");
+        demand[j] = Double.parseDouble(s);
+    }
+
+    // ----- Balanceo automático: agregar fila o columna dummy si no cuadra oferta y demanda -----
+    double totalSupply = 0;
+    double totalDemand = 0;
+    for (double x : supply) totalSupply += x;
+    for (double x : demand) totalDemand += x;
+
+    boolean addedDummyRow = false, addedDummyCol = false;
+
+    if (Math.abs(totalSupply - totalDemand) > 1e-8) {
+        if (totalSupply > totalDemand) {
+            // --- Caso: la oferta > demanda -> agregar columna dummy ---
+            int newN = n + 1;
+            double[][] newCosts = new double[m][newN];
+            for (int i = 0; i < m; i++) {
+                System.arraycopy(costs[i], 0, newCosts[i], 0, n);
+                newCosts[i][n] = 0.0; // costo 0 para columna dummy
+            }
+            double[] newDemand = new double[newN];
+            System.arraycopy(demand, 0, newDemand, 0, n);
+            newDemand[n] = totalSupply - totalDemand; // cantidad faltante
+            costs = newCosts;
+            demand = newDemand;
+            colNames = Arrays.copyOf(colNames, newN);
+            colNames[newN - 1] = "Demanda_nueva";
+            n = newN;
+            addedDummyCol = true;
+        } else {
+            // --- Caso: la demanda > oferta -> agregar fila dummy ---
+            int newM = m + 1;
+            double[][] newCosts = new double[newM][n];
+            for (int i = 0; i < m; i++) System.arraycopy(costs[i], 0, newCosts[i], 0, n);
+            for (int j = 0; j < n; j++) newCosts[m][j] = 0.0; // costo 0 para fila dummy
+            double[] newSupply = new double[newM];
+            System.arraycopy(supply, 0, newSupply, 0, m);
+            newSupply[m] = totalDemand - totalSupply; // cantidad faltante
+            costs = newCosts;
+            supply = newSupply;
+            rowNames = Arrays.copyOf(rowNames, newM);
+            rowNames[newM - 1] = "DF";
+            m = newM;
+            addedDummyRow = true;
+        }
+    }
+
+    // ----- VAM -----
+    double[][] allocation = new double[m][n];
+    boolean[] rowDone = new boolean[m];
+    boolean[] colDone = new boolean[n];
+
+    double totalCost = 0.0;
+    int remainingRows = m;
+    int remainingCols = n;
+    final double EPS = 1e-8;
+
+    while (remainingRows > 0 && remainingCols > 0) {
+        // --- calcular penalizaciones filas ---
+        double[] rowPenalty = new double[m];
+        Arrays.fill(rowPenalty, -1.0);
+        for (int i = 0; i < m; i++) {
+            if (rowDone[i]) continue;
+            double min1 = Double.POSITIVE_INFINITY, min2 = Double.POSITIVE_INFINITY;
+            for (int j = 0; j < n; j++) {
+                if (colDone[j]) continue;
+                double c = costs[i][j];
+                if (c < min1) { min2 = min1; min1 = c; }
+                else if (c < min2) { min2 = c; }
+            }
+            if (min1 == Double.POSITIVE_INFINITY) rowPenalty[i] = -1;
+            else if (min2 == Double.POSITIVE_INFINITY) rowPenalty[i] = min1;
+            else rowPenalty[i] = min2 - min1;
+        }
+
+        // --- calcular penalizaciones columnas ---
+        double[] colPenalty = new double[n];
+        Arrays.fill(colPenalty, -1.0);
+        for (int j = 0; j < n; j++) {
+            if (colDone[j]) continue;
+            double min1 = Double.POSITIVE_INFINITY, min2 = Double.POSITIVE_INFINITY;
+            for (int i = 0; i < m; i++) {
+                if (rowDone[i]) continue;
+                double c = costs[i][j];
+                if (c < min1) { min2 = min1; min1 = c; }
+                else if (c < min2) { min2 = c; }
+            }
+            if (min1 == Double.POSITIVE_INFINITY) colPenalty[j] = -1;
+            else if (min2 == Double.POSITIVE_INFINITY) colPenalty[j] = min1;
+            else colPenalty[j] = min2 - min1;
+        }
+
+        // --- seleccionar fila o columna con mayor penalización ---
+        double bestPenalty = -1;
+        boolean chooseRow = true;
+        int idx = -1;
+        for (int i = 0; i < m; i++) {
+            if (rowDone[i]) continue;
+            if (rowPenalty[i] > bestPenalty) { bestPenalty = rowPenalty[i]; chooseRow = true; idx = i; }
+        }
+        for (int j = 0; j < n; j++) {
+            if (colDone[j]) continue;
+            if (colPenalty[j] > bestPenalty) { bestPenalty = colPenalty[j]; chooseRow = false; idx = j; }
+        }
+        if (idx == -1) break;
+
+        int selRow = -1, selCol = -1;
+        if (chooseRow) {
+            selRow = idx;
+            double minCost = Double.POSITIVE_INFINITY;
+            for (int j = 0; j < n; j++) {
+                if (colDone[j]) continue;
+                if (costs[selRow][j] < minCost) { minCost = costs[selRow][j]; selCol = j; }
+            }
+        } else {
+            selCol = idx;
+            double minCost = Double.POSITIVE_INFINITY;
+            for (int i = 0; i < m; i++) {
+                if (rowDone[i]) continue;
+                if (costs[i][selCol] < minCost) { minCost = costs[i][selCol]; selRow = i; }
+            }
+        }
+
+        if (selRow == -1 || selCol == -1) break;
+
+        // --- asignar cantidad mínima disponible ---
+        double q = Math.min(supply[selRow], demand[selCol]);
+        allocation[selRow][selCol] += q;
+        totalCost += q * costs[selRow][selCol];
+        supply[selRow] -= q;
+        demand[selCol] -= q;
+
+        if (Math.abs(supply[selRow]) < EPS && !rowDone[selRow]) { rowDone[selRow] = true; remainingRows--; }
+        if (Math.abs(demand[selCol]) < EPS && !colDone[selCol]) { colDone[selCol] = true; remainingCols--; }
+    }
+
+    // ----- Construir texto de salida con formato S1 -----
+    StringBuilder sb = new StringBuilder();
+    sb.append("\n");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (allocation[i][j] > 0.0) {
+                sb.append(String.format("%s -> %d * %d = %d\n",
+                        rowNames[i],
+                        (int) allocation[i][j],
+                        (int) costs[i][j],
+                        (int) (allocation[i][j] * costs[i][j])
+                ));
+            }
+        }
+    }
+
+    if (addedDummyCol || addedDummyRow) {
+        sb.append("\n Se balanceó para igualar la oferta y demanda\n");
+    }
+
+    if (txtResultadosArea != null) txtResultadosArea.setText(sb.toString());
+    if (txtCostoTotal != null) txtCostoTotal.setText(String.format("%d", (int) totalCost));
+
+} catch (NumberFormatException ex) {
+    JOptionPane.showMessageDialog(this, "Error al leer valores numéricos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+} catch (Exception ex) {
+    JOptionPane.showMessageDialog(this, "Error al calcular Método de Aproximación de Vogel: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+}
 
 
                                                
