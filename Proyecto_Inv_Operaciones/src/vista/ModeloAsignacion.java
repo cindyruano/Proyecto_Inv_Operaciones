@@ -24,92 +24,13 @@ import javax.swing.table.JTableHeader;
  * @author cindy
  */
 public class ModeloAsignacion extends javax.swing.JPanel {
-    private double[][] matriz;              // matriz en proceso (reducida)
-    private double[][] original;            // matriz original (costos reales)
-    private Set<Integer> filasMarcadas = new HashSet<>();     // filas "marcadas" durante trazo
-    private Set<Integer> columnasMarcadas = new HashSet<>();  // columnas "marcadas"
-    private int[] asignacionFinal = null;   // asignacion final: indiceCol para cada fila (o -1)
-
-    private double[][] valoresOriginales;
-    private java.util.List<Integer> columnasColoreadas = new ArrayList<>();
-    private java.util.List<Integer> filasColoreadas = new ArrayList<>();
-    private int contadorAsignaciones = 0;
+   
 
     public ModeloAsignacion() {
         initComponents();
-         // 🔹 Renderizador que colorea los ceros en rojo
+        new Controlador.ControladorAsignacion(this);
     
     }
-private int[] hungarianAlgorithm(double[][] costMatrix) {
-    int n = costMatrix.length;
-    int m = costMatrix[0].length;
-    int dim = Math.max(n, m);
-
-    double[][] cost = new double[dim][dim];
-    for (int i = 0; i < dim; i++) {
-        for (int j = 0; j < dim; j++) {
-            if (i < n && j < m)
-                cost[i][j] = costMatrix[i][j];
-            else
-                cost[i][j] = 0;
-        }
-    }
-
-    double[] u = new double[dim + 1];
-    double[] v = new double[dim + 1];
-    int[] p = new int[dim + 1];
-    int[] way = new int[dim + 1];
-
-    for (int i = 1; i <= dim; i++) {
-        p[0] = i;
-        int j0 = 0;
-        double[] minv = new double[dim + 1];
-        boolean[] used = new boolean[dim + 1];
-        Arrays.fill(minv, Double.POSITIVE_INFINITY);
-        Arrays.fill(used, false);
-        do {
-            used[j0] = true;
-            int i0 = p[j0], j1 = 0;
-            double delta = Double.POSITIVE_INFINITY;
-            for (int j = 1; j <= dim; j++) {
-                if (!used[j]) {
-                    double cur = cost[i0 - 1][j - 1] - u[i0] - v[j];
-                    if (cur < minv[j]) {
-                        minv[j] = cur;
-                        way[j] = j0;
-                    }
-                    if (minv[j] < delta) {
-                        delta = minv[j];
-                        j1 = j;
-                    }
-                }
-            }
-            for (int j = 0; j <= dim; j++) {
-                if (used[j]) {
-                    u[p[j]] += delta;
-                    v[j] -= delta;
-                } else {
-                    minv[j] -= delta;
-                }
-            }
-            j0 = j1;
-        } while (p[j0] != 0);
-
-        do {
-            int j1 = way[j0];
-            p[j0] = p[j1];
-            j0 = j1;
-        } while (j0 != 0);
-    }
-
-    int[] ans = new int[n];
-    for (int j = 1; j <= dim; j++) {
-        if (p[j] <= n && j <= m) {
-            ans[p[j] - 1] = j - 1;
-        }
-    }
-    return ans;
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -292,88 +213,7 @@ private int[] hungarianAlgorithm(double[][] costMatrix) {
     }//GEN-LAST:event_txtTipo1ActionPerformed
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
-                                     
-     try {
-        DefaultTableModel modelo = (DefaultTableModel) tblDatos.getModel();
-        int filas = modelo.getRowCount();
-        int columnasTot = modelo.getColumnCount();
-
-        if (columnasTot <= 1 || filas == 0) {
-            JOptionPane.showMessageDialog(this, "No hay datos para procesar.");
-            return;
-        }
-
-        int columnas = columnasTot - 1;
-        double[][] matriz = new double[filas][columnas];
-        double[][] original = new double[filas][columnas];
-
-        // Leer datos de la tabla
-        for (int i = 0; i < filas; i++) {
-            for (int j = 1; j <= columnas; j++) {
-                Object val = modelo.getValueAt(i, j);
-                if (val == null || val.toString().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Hay celdas vacías en la matriz.");
-                    return;
-                }
-                double num = Double.parseDouble(val.toString());
-                matriz[i][j - 1] = num;
-                original[i][j - 1] = num;
-            }
-        }
-
-        // 🔹 Copia local de nombres de columnas y filas
-        String[] columnasNombres = new String[columnas];
-        for (int j = 0; j < columnas; j++) {
-            columnasNombres[j] = modelo.getColumnName(j + 1);
-        }
-
-        // =====================================================
-        // 1️⃣ Reducción por filas
-        // =====================================================
-        for (int i = 0; i < filas; i++) {
-            double min = Arrays.stream(matriz[i]).min().orElse(0);
-            for (int j = 0; j < columnas; j++) matriz[i][j] -= min;
-        }
-
-        // =====================================================
-        // 2️⃣ Reducción por columnas
-        // =====================================================
-        for (int j = 0; j < columnas; j++) {
-            double min = Double.MAX_VALUE;
-            for (int i = 0; i < filas; i++) min = Math.min(min, matriz[i][j]);
-            if (min == Double.MAX_VALUE) min = 0;
-            for (int i = 0; i < filas; i++) matriz[i][j] -= min;
-        }
-
-        // =====================================================
-        // 3️⃣ Asignación con algoritmo Húngaro
-        // =====================================================
-        int[] asignacion = hungarianAlgorithm(matriz);
-
-        // =====================================================
-        // 4️⃣ Mostrar resultado
-        // =====================================================
-        double total = 0;
-        StringBuilder sb = new StringBuilder();
-        sb.append("Asignación óptima:\n");
-
-        for (int i = 0; i < filas; i++) {
-            int j = asignacion[i];
-            if (j >= 0 && j < columnas) {
-                double costo = original[i][j];
-                total += costo;
-                sb.append((i + 1) + "-" + columnasNombres[j] + " = " + costo + "\n");
-            }
-        }
-        sb.append("\nCosto total = ").append(total);
-
-        txtResultados.setText(sb.toString());
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        txtResultados.setText("Error: " + e.getMessage());
-    }
-     
+      
 
     }//GEN-LAST:event_btnCalcularActionPerformed
     
@@ -389,45 +229,16 @@ private int[] hungarianAlgorithm(double[][] costMatrix) {
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnTablasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTablasActionPerformed
-       try {
-        int filas = Integer.parseInt(txtTipo1.getText());
-        int columnas = Integer.parseInt(txtColumnas.getText());
+     
+  
 
-        if (filas <= 0 || columnas <= 0) {
-            JOptionPane.showMessageDialog(this, "Debe ingresar valores válidos para filas y columnas.");
-            return;
-        }
-
-        String[] nombresColumnas = new String[columnas + 1];
-        nombresColumnas[0] = "";
-        for (int j = 1; j <= columnas; j++) {
-            nombresColumnas[j] = String.valueOf((char) ('A' + (j - 1)));
-        }
-
-        Object[][] datos = new Object[filas][columnas + 1];
-        for (int i = 0; i < filas; i++) {
-            datos[i][0] = String.valueOf(i + 1);
-        }
-
-        DefaultTableModel modelo = new DefaultTableModel(datos, nombresColumnas) {
-            @Override
-            public boolean isCellEditable(int row, int col) {
-                return col != 0;
-            }
-        };
-        tblDatos.setModel(modelo);
-        txtResultados.setText("");
-
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Ingrese números válidos para filas y columnas.");
-    }
     }//GEN-LAST:event_btnTablasActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCalcular;
+    public javax.swing.JButton btnCalcular;
     public javax.swing.JButton btnLimpiar;
-    private javax.swing.JButton btnTablas;
+    public javax.swing.JButton btnTablas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
@@ -443,7 +254,7 @@ private int[] hungarianAlgorithm(double[][] costMatrix) {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTextPane jTextPane1;
     public javax.swing.JTable tblDatos;
-    private javax.swing.JTextField txtColumnas;
+    public javax.swing.JTextField txtColumnas;
     public javax.swing.JTextArea txtResultados;
     private javax.swing.JTextField txtTipo1;
     // End of variables declaration//GEN-END:variables
