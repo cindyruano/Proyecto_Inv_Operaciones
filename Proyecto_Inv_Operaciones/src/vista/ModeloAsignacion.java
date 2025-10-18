@@ -37,113 +37,9 @@ public class ModeloAsignacion extends javax.swing.JPanel {
 
     public ModeloAsignacion() {
         initComponents();
-         // 🔹 Renderizador que colorea los ceros en rojo
-    
+         
     }
 
-//    private double parseNumero(Object valor) {
-//        if (valor == null) {
-//            return 0;
-//        }
-//        String texto = valor.toString().trim();
-//        if (texto.isEmpty()) {
-//            return 0;
-//        }
-//        try {
-//            return Double.parseDouble(texto.replace(",", ".")); // soporta 0,12 o 0.12
-//        } catch (NumberFormatException e) {
-//            return 0;
-//        }
-//    }
-
-//    private double getValorNumerico(Object valorCelda) {
-//        if (valorCelda == null) {
-//            return 0.0;
-//        }
-//
-//        String valorStr = valorCelda.toString().trim();
-//        if (valorStr.isEmpty()) {
-//            return 0.0;
-//        }
-//
-//        // Permitir comas decimales
-//        valorStr = valorStr.replace(",", ".");
-//
-//        try {
-//            return Double.parseDouble(valorStr);
-//        } catch (NumberFormatException e) {
-//            return 0.0;
-//        }
-//    }
-
-  /*  private double getValorNumerico(Object valorCelda) {
-    if (valorCelda == null) return 0.0;
-
-    String valorStr = valorCelda.toString().trim();
-    if (valorStr.isEmpty()) return 0.0;
-
-    valorStr = valorStr.replace(",", "."); // Permitir comas decimales
-
-    try {
-        return Double.parseDouble(valorStr);
-    } catch (NumberFormatException e) {
-        return 0.0;
-    }
-}*/
-
-//    private void pintarCeldas() {
-//        DefaultTableModel modelo = (DefaultTableModel) tblDatos.getModel();
-//        int filas = modelo.getRowCount();
-//        int columnas = modelo.getColumnCount();
-//
-//        boolean[] filasPintadas = new boolean[filas];
-//        boolean[] columnasPintadas = new boolean[columnas];
-//
-//         Detercar filas a pintar
-//        for (int i = 0; i < filas; i++) {
-//            int cerosFila = 0;
-//            for (int j = 1; j < columnas; j++) {
-//                if (Math.abs(getValorNumerico(modelo.getValueAt(i, j))) < 0.000001) {
-//                    cerosFila++;
-//                }
-//            }
-//            if (cerosFila >= 2) {
-//                filasPintadas[i] = true;
-//            }
-//        }
-//
-//         Detectar columnas a pintar
-//        for (int j = 1; j < columnas; j++) {
-//            int cerosCol = 0;
-//            for (int i = 0; i < filas; i++) {
-//                if (Math.abs(getValorNumerico(modelo.getValueAt(i, j))) < 0.000001) {
-//                    cerosCol++;
-//                }
-//            }
-//            if (cerosCol >= 2) {
-//                columnasPintadas[j] = true;
-//            }
-//        }
-//         Aplicar TableCellRenderer personalizado
-//        tblDatos.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-//            @Override
-//            public Component getTableCellRendererComponent(JTable table, Object value,
-//                    boolean isSelected, boolean hasFocus, int row, int column) {
-//                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-//
-//                if (column == 0) {
-//                    c.setBackground(Color.WHITE);
-//                } else if (filasPintadas[row] || columnasPintadas[column]) {
-//                    c.setBackground(new Color(173, 216, 230));
-//                } else {
-//                    c.setBackground(Color.WHITE);
-//                }
-//                setHorizontalAlignment(SwingConstants.CENTER);
-//                return c;
-//            }
-//        });
-//        tblDatos.repaint();
-//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -327,8 +223,8 @@ public class ModeloAsignacion extends javax.swing.JPanel {
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
 
-        try {
-        // 🔹 Resetear variables internas antes de cada cálculo
+                                         
+    try {
         filasMarcadas.clear();
         columnasMarcadas.clear();
         asignacionFinal = null;
@@ -344,11 +240,11 @@ public class ModeloAsignacion extends javax.swing.JPanel {
             return;
         }
 
-        int columnas = columnasTot - 1; // columna 0 es numeración
-
+        int columnas = columnasTot - 1; 
         matriz = new double[filas][columnas];
         original = new double[filas][columnas];
 
+        // Cargar matriz
         for (int i = 0; i < filas; i++) {
             for (int j = 1; j <= columnas; j++) {
                 double val = getValorNumerico(modelo.getValueAt(i, j));
@@ -357,66 +253,68 @@ public class ModeloAsignacion extends javax.swing.JPanel {
             }
         }
 
-        
-            for (int i = 0; i < filas; i++) {
-                double min = Double.MAX_VALUE;
-                for (int j = 0; j < columnas; j++) min = Math.min(min, matriz[i][j]);
-                if (min == Double.MAX_VALUE) min = 0;
-                for (int j = 0; j < columnas; j++) matriz[i][j] -= min;
-            }
-
-            // --- 2) Resta por columna ---
-            for (int j = 0; j < columnas; j++) {
-                double min = Double.MAX_VALUE;
-                for (int i = 0; i < filas; i++) min = Math.min(min, matriz[i][j]);
-                if (min == Double.MAX_VALUE) min = 0;
-                for (int i = 0; i < filas; i++) matriz[i][j] -= min;
-            }
-
-            // Mostrar la matriz reducida en la tabla (opcional pero útil)
-            DefaultTableModel m = (DefaultTableModel) tblDatos.getModel();
-            for (int i = 0; i < filas; i++) {
-                for (int j = 0; j < columnas; j++) {
-                    m.setValueAt(String.format("%.2f", matriz[i][j]), i, j + 1);
-                }
-            }
-
-            // --- 3) Intentar encontrar asignación máxima sobre ceros (Kuhn) ---
-            int[] match = findMaximumMatchingZeros(matriz); // match[row] = col o -1
-
-            // si no hay asignación completa, iterar: trazar líneas, ajustar matriz y volver a intentar
-            while (countAssigned(match) < filas) {
-                // construir asignaciones parciales map(row -> col) desde match
-                Map<Integer, Integer> asignaciones = new HashMap<>();
-                for (int i = 0; i < match.length; i++)
-                    if (match[i] != -1) asignaciones.put(i, match[i]);
-
-                trazarLineas(asignaciones); // calcula filasMarcadas, columnasMarcadas
-                ajustarMatriz();           // resta min no cubierto y suma en intersecciones
-
-                // actualizar vista con valores nuevos
-                for (int i = 0; i < filas; i++)
-                    for (int j = 0; j < columnas; j++)
-                        m.setValueAt(String.format("%.2f", matriz[i][j]), i, j + 1);
-
-                // intentar emparejar nuevamente
-                match = findMaximumMatchingZeros(matriz);
-            }
-
-            // cuando termina: match es asignación perfecta
-            asignacionFinal = match.clone(); // asignacionFinal[row] = col
-
-            // colorear tabla y mostrar resultado
-            colorearTabla(); // establece renderer con la info de filas/columnas marcadas y asignación
-
-            mostrarResultados(asignacionFinal, original);
-            tblDatos.repaint();
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al procesar los datos: " + e.getMessage());
-            e.printStackTrace();
+        // Resta mínima por filas
+        for (int i = 0; i < filas; i++) {
+            double min = Arrays.stream(matriz[i]).min().orElse(0);
+            for (int j = 0; j < columnas; j++) matriz[i][j] -= min;
         }
-    
+
+        // Resta mínima por columnas
+        for (int j = 0; j < columnas; j++) {
+            double min = Double.MAX_VALUE;
+            for (int i = 0; i < filas; i++) min = Math.min(min, matriz[i][j]);
+            if (min == Double.MAX_VALUE) min = 0;
+            for (int i = 0; i < filas; i++) matriz[i][j] -= min;
+        }
+
+        // Mostrar matriz reducida
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                modelo.setValueAt(String.format("%.2f", matriz[i][j]), i, j + 1);
+            }
+        }
+
+        // --- Intentar encontrar asignación ---
+        int[] match = findMaximumMatchingZeros(matriz);
+        int iteraciones = 0;
+        int maxIter = 20; // 🔹 límite para evitar bucles infinitos
+
+        while (countAssigned(match) < filas && iteraciones < maxIter) {
+            iteraciones++;
+
+            Map<Integer, Integer> asignaciones = new HashMap<>();
+            for (int i = 0; i < match.length; i++)
+                if (match[i] != -1) asignaciones.put(i, match[i]);
+
+            trazarLineas(asignaciones);
+            ajustarMatriz();
+
+            // Actualizar tabla
+            for (int i = 0; i < filas; i++)
+                for (int j = 0; j < columnas; j++)
+                    modelo.setValueAt(String.format("%.2f", matriz[i][j]), i, j + 1);
+
+            match = findMaximumMatchingZeros(matriz);
+        }
+
+        if (iteraciones >= maxIter) {
+            JOptionPane.showMessageDialog(this, 
+                "El algoritmo no pudo encontrar una asignación óptima.\n" +
+                "Verifique los valores de la matriz.", 
+                "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+
+        asignacionFinal = match.clone();
+        colorearTabla();
+        mostrarResultados(asignacionFinal, original);
+        tblDatos.repaint();
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al procesar los datos: " + e.getMessage());
+        e.printStackTrace();
+    }
+
+
 
     
     }//GEN-LAST:event_btnCalcularActionPerformed

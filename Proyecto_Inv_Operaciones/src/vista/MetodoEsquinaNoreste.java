@@ -242,10 +242,10 @@ public class MetodoEsquinaNoreste extends javax.swing.JPanel {
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
                                               
     DefaultTableModel modelo = (DefaultTableModel) tblDatos.getModel();
-    int filas = modelo.getRowCount() - 1; // sin la fila Demanda
-    int columnas = modelo.getColumnCount() - 2; // sin "Suministro" y "Oferta"
+    int filas = modelo.getRowCount() - 1; 
+    int columnas = modelo.getColumnCount() - 2; 
 
-    // Extraer matriz de costos
+   
     int[][] costos = new int[filas][columnas];
     for (int i = 0; i < filas; i++) {
         for (int j = 1; j <= columnas; j++) {
@@ -254,14 +254,14 @@ public class MetodoEsquinaNoreste extends javax.swing.JPanel {
         }
     }
 
-    // Extraer oferta
+   
     int[] oferta = new int[filas];
     for (int i = 0; i < filas; i++) {
         Object val = modelo.getValueAt(i, modelo.getColumnCount() - 1);
         oferta[i] = (val == null || val.toString().isEmpty()) ? 0 : Integer.parseInt(val.toString());
     }
 
-    // Extraer demanda
+    
     int[] demanda = new int[columnas];
     for (int j = 1; j <= columnas; j++) {
         Object val = modelo.getValueAt(modelo.getRowCount() - 1, j);
@@ -336,33 +336,30 @@ for (i = 0; i < filas; i++) {
     }
 }
 
-// --- Mostrar tabla de asignaciones en JTextArea ---
-StringBuilder tablaFinal = new StringBuilder();
-tablaFinal.append("📋 Tabla de asignaciones:\n\n");
+StringBuilder solucion = new StringBuilder();
+solucion.append(" Solución del Método Esquina Noroeste:\n\n");
 
-// Encabezados
-tablaFinal.append(String.format("%12s", ""));
-for (j = 0; j < columnas; j++) {
-    tablaFinal.append(String.format("%8s", "D" + (j+1)));
-}
-tablaFinal.append("\n");
 
-// Filas con asignaciones
+
 for (i = 0; i < filas; i++) {
-    tablaFinal.append(String.format("%10s", "S" + (i+1)));
     for (j = 0; j < columnas; j++) {
-        tablaFinal.append(String.format("%8d", asignaciones[i][j]));
+        if (asignaciones[i][j] > 0) {
+            int cantidad = asignaciones[i][j];
+            int costoUnitario = costos[i][j];
+            int subtotal = cantidad * costoUnitario;
+            costoTotal += subtotal;
+
+            solucion.append(String.format("S%d - D%d: %d × %d = %d%n", 
+                    (i + 1), (j + 1), cantidad, costoUnitario, subtotal));
+        }
     }
-    tablaFinal.append("\n");
 }
 
-// Agregar las iteraciones debajo de la tabla
-tablaFinal.append("\n--- Iteraciones ---\n");
-tablaFinal.append(iteraciones.toString());
+solucion.append("\n------------------------\n");
+solucion.append(String.format(" Costo total = %d", costoTotal));
 
-Resultados.setText(tablaFinal.toString());
+Resultados.setText(solucion.toString());
 
-// --- Mostrar solo costo total en txtRespuesta ---
 txtRespuesta.setText(String.valueOf(costoTotal));
 
     }//GEN-LAST:event_btnCalcularActionPerformed
@@ -396,31 +393,30 @@ txtRespuesta.setText(String.valueOf(costoTotal));
     }
     int numDemandas = (int) demandasObj;
 
-    // --- Construir nombres de columnas ---
-    String[] columnas = new String[numDemandas + 2]; // +2 por Suministro y Oferta
+    
+    String[] columnas = new String[numDemandas + 2]; 
     columnas[0] = "Suministro";
     for (int i = 1; i <= numDemandas; i++) {
         columnas[i] = "D" + i;
     }
     columnas[columnas.length - 1] = "Oferta";
 
-    // --- Crear modelo vacío ---
+    
     javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(columnas, 0);
     tblDatos.setModel(modelo);
 
-    // --- Agregar filas de Suministro ---
     for (int i = 1; i <= numOfertas; i++) {
         Object[] fila = new Object[columnas.length];
         fila[0] = "Suministro " + i;
         modelo.addRow(fila);
     }
 
-    // --- Agregar fila de Demanda ---
+
     Object[] filaDemanda = new Object[columnas.length];
     filaDemanda[0] = "Demanda";
     modelo.addRow(filaDemanda);
 
-    // Ajustar ancho columnas
+  
     tblDatos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     javax.swing.table.TableColumnModel columnModel = tblDatos.getColumnModel();
     for (int i = 0; i < columnModel.getColumnCount(); i++) {
@@ -440,8 +436,6 @@ txtRespuesta.setText(String.valueOf(costoTotal));
 
     private void btnFIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFIActionPerformed
 
-       // Botón DEMANDAS
-    txtTipo.setText(" - FORMA INICIAL");
 
     String demandaTexto = txtDemanda.getText().trim();
     if (demandaTexto.isEmpty()) {
@@ -458,7 +452,7 @@ txtRespuesta.setText(String.valueOf(costoTotal));
         return;
     }
 
-    // Guardar número de demandas en propiedad de la tabla (para usar en btnof)
+   
     tblDatos.putClientProperty("numDemandas", numDemandas);
 
     JOptionPane.showMessageDialog(this, "Ahora ingrese el número de OFERTAS y presione el botón Oferta");
