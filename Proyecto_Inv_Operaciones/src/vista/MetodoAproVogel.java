@@ -451,6 +451,7 @@ public class MetodoAproVogel extends javax.swing.JPanel {
 
         // ----- Construir texto de salida -----
         StringBuilder sb = new StringBuilder();
+        Resultados.append("\n");
         //sb.append(     "RESUL \n\n");
         //sb.append(String.format(    "Asignación:\n\n"));
 
@@ -463,8 +464,8 @@ public class MetodoAproVogel extends javax.swing.JPanel {
             }
         }
 
-        //sb.append("\n");
-        Resultados.append("\n");
+        sb.append("\n");
+        
         //sb.append(String.format("Costo total: %.2f\n", totalCost));
         if (addedDummyCol || addedDummyRow) {
             sb.append("\n(Se balanceó para igualar la oferta y demanda)\n");

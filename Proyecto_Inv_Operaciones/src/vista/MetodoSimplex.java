@@ -4,6 +4,14 @@
  */
 package vista;
 
+import java.awt.Dimension;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
 /**
  *
  * @author cindy
@@ -26,36 +34,16 @@ public class MetodoSimplex extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        txtEX1 = new javax.swing.JTextField();
-        txtEX2 = new javax.swing.JTextField();
-        txtX3 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        txtRX1 = new javax.swing.JTextField();
-        txtRX2 = new javax.swing.JTextField();
-        txtRY1 = new javax.swing.JTextField();
-        txtRY2 = new javax.swing.JTextField();
-        txtRS3 = new javax.swing.JTextField();
-        txtRS1 = new javax.swing.JTextField();
-        txtRS2 = new javax.swing.JTextField();
-        txtRZ3 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        txtRZ1 = new javax.swing.JTextField();
-        txtRZ2 = new javax.swing.JTextField();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
+        txtEcuacion = new javax.swing.JTextField();
+        txtRestriccion1 = new javax.swing.JTextField();
+        txtRestriccion2 = new javax.swing.JTextField();
+        txtRestriccion3 = new javax.swing.JTextField();
+        txtRestriccion4 = new javax.swing.JTextField();
         btnLimpiar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtRespuesta1 = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        txtRespuesta2 = new javax.swing.JTextArea();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
@@ -63,99 +51,25 @@ public class MetodoSimplex extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        btnMinimizar = new javax.swing.JButton();
         btnMaximizar = new javax.swing.JButton();
         txtTipo = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
         jpanelmtd_simplex = new javax.swing.JScrollPane();
+        panelInterno = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(230, 230, 230));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        txtEX1.addActionListener(new java.awt.event.ActionListener() {
+        txtEcuacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEX1ActionPerformed(evt);
+                txtEcuacionActionPerformed(evt);
             }
         });
-        add(txtEX1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 50, -1));
-        add(txtEX2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, 60, -1));
-        add(txtX3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 80, 50, -1));
-
-        jLabel3.setText("X1");
-        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 80, -1, -1));
-
-        jLabel4.setText("X2");
-        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 80, -1, -1));
-
-        jLabel5.setText("X3");
-        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 80, -1, -1));
-        add(txtRX1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 80, 40, -1));
-        add(txtRX2, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 120, 40, -1));
-
-        txtRY1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRY1ActionPerformed(evt);
-            }
-        });
-        add(txtRY1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 80, 50, -1));
-        add(txtRY2, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 110, 50, -1));
-
-        txtRS3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRS3ActionPerformed(evt);
-            }
-        });
-        add(txtRS3, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 140, 50, -1));
-
-        txtRS1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRS1ActionPerformed(evt);
-            }
-        });
-        add(txtRS1, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 80, 50, -1));
-
-        txtRS2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRS2ActionPerformed(evt);
-            }
-        });
-        add(txtRS2, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 110, 50, -1));
-
-        txtRZ3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRZ3ActionPerformed(evt);
-            }
-        });
-        add(txtRZ3, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 150, 50, 20));
-
-        jLabel7.setText("X");
-        add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 80, 10, -1));
-
-        jLabel8.setText("X");
-        add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 120, -1, -1));
-
-        jLabel9.setText("+");
-        add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 80, 20, -1));
-
-        jLabel10.setText("Y");
-        add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 80, 10, -1));
-
-        jLabel11.setText("Y");
-        add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 110, 20, -1));
-
-        jLabel12.setText("X, Y");
-        add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 150, -1, -1));
-
-        jLabel13.setText("+");
-        add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 120, -1, -1));
-        add(txtRZ1, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 80, 50, -1));
-        add(txtRZ2, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 110, 50, -1));
-
-        jLabel14.setText("+");
-        add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, 20, -1));
-
-        jLabel15.setText("+");
-        add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 80, 20, -1));
+        add(txtEcuacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 250, 30));
+        add(txtRestriccion1, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 70, 230, -1));
+        add(txtRestriccion2, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 110, 230, 20));
+        add(txtRestriccion3, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 150, 230, 20));
+        add(txtRestriccion4, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 190, 230, 20));
 
         btnLimpiar.setBackground(new java.awt.Color(204, 204, 204));
         btnLimpiar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
@@ -163,17 +77,22 @@ public class MetodoSimplex extends javax.swing.JPanel {
         btnLimpiar.setText("LIMPIAR");
         btnLimpiar.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(33, 48, 71), null));
         btnLimpiar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
         add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, 100, 30));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        txtRespuesta1.setColumns(20);
+        txtRespuesta1.setRows(5);
+        jScrollPane2.setViewportView(txtRespuesta1);
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 540, 130, -1));
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane3.setViewportView(jTextArea2);
+        txtRespuesta2.setColumns(20);
+        txtRespuesta2.setRows(5);
+        jScrollPane3.setViewportView(txtRespuesta2);
 
         add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 540, 130, -1));
 
@@ -212,19 +131,6 @@ public class MetodoSimplex extends javax.swing.JPanel {
         jLabel19.setText("RESPUESTA");
         add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 510, -1, -1));
 
-        btnMinimizar.setBackground(new java.awt.Color(204, 204, 204));
-        btnMinimizar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
-        btnMinimizar.setForeground(new java.awt.Color(33, 48, 71));
-        btnMinimizar.setText("MINIMIZAR");
-        btnMinimizar.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(33, 48, 71), null));
-        btnMinimizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnMinimizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMinimizarActionPerformed(evt);
-            }
-        });
-        add(btnMinimizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 180, 100, 30));
-
         btnMaximizar.setBackground(new java.awt.Color(204, 204, 204));
         btnMaximizar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
         btnMaximizar.setForeground(new java.awt.Color(33, 48, 71));
@@ -236,7 +142,7 @@ public class MetodoSimplex extends javax.swing.JPanel {
                 btnMaximizarActionPerformed(evt);
             }
         });
-        add(btnMaximizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 180, 100, 30));
+        add(btnMaximizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 180, 100, 30));
 
         txtTipo.setBackground(new java.awt.Color(230, 230, 230));
         txtTipo.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
@@ -244,84 +150,313 @@ public class MetodoSimplex extends javax.swing.JPanel {
         txtTipo.setBorder(null);
         add(txtTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 40, 130, 25));
         add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 50, -1, -1));
+
+        jpanelmtd_simplex.setViewportView(panelInterno);
+
         add(jpanelmtd_simplex, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, 850, 270));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtEX1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEX1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtEX1ActionPerformed
-
-    private void txtRS3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRS3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtRS3ActionPerformed
-
-    private void txtRS2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRS2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtRS2ActionPerformed
-
-    private void txtRY1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRY1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtRY1ActionPerformed
-
-    private void txtRS1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRS1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtRS1ActionPerformed
-
-    private void txtRZ3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRZ3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtRZ3ActionPerformed
-
-    private void btnMinimizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMinimizarActionPerformed
-        txtTipo.setText(" - MINIMIZAR");
-    }//GEN-LAST:event_btnMinimizarActionPerformed
-
     private void btnMaximizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMaximizarActionPerformed
         txtTipo.setText(" - MAXIMIZAR");
+        try {
+        // Limpiar panel
+        panelInterno.removeAll();
+        panelInterno.setLayout(new BoxLayout(panelInterno, BoxLayout.Y_AXIS));
+        panelInterno.revalidate();
+        panelInterno.repaint();
+
+        // ----------------------------------------
+        // LEER ENTRADAS
+        // ----------------------------------------
+        String ecuacion = txtEcuacion.getText().trim();
+        String[] restricciones = {
+            txtRestriccion1.getText().trim(),
+            txtRestriccion2.getText().trim(),
+            txtRestriccion3.getText().trim()
+        };
+
+        for (int i = 0; i < restricciones.length; i++) {
+            String r = restricciones[i].toLowerCase();
+            if (r.contains(">") || r.contains("=>") || r.matches(".*x\\d+\\s*,.*")) {
+                restricciones[i] = "";
+            }
+        }
+
+        // ----------------------------------------
+        // PARSEAR FUNCIÓN OBJETIVO
+        // ----------------------------------------
+        String ecuacionOriginal = ecuacion;
+        ecuacion = ecuacion.toLowerCase().replace("z=", "").replace("z =", "").trim();
+        String[] partesZ = ecuacion.split("(?=[+-])");
+
+        java.util.ArrayList<Double> coefZ = new java.util.ArrayList<>();
+        int numVariables = 0;
+
+        for (String parte : partesZ) {
+            parte = parte.trim();
+            if (parte.isEmpty()) continue;
+            java.util.regex.Matcher m = java.util.regex.Pattern.compile("([+-]?\\d*\\.?\\d*)x(\\d+)").matcher(parte);
+            if (m.find()) {
+                String c = m.group(1);
+                if (c == null || c.isEmpty() || c.equals("+")) c = "1";
+                else if (c.equals("-")) c = "-1";
+                double coef = Double.parseDouble(c);
+                int idx = Integer.parseInt(m.group(2));
+                while (coefZ.size() < idx) coefZ.add(0.0);
+                coefZ.set(idx - 1, coef);
+                numVariables = Math.max(numVariables, idx);
+            }
+        }
+        while (coefZ.size() < numVariables) coefZ.add(0.0);
+
+        int numRestricciones = 0;
+        for (String r : restricciones) if (!r.isEmpty()) numRestricciones++;
+
+        if (numRestricciones == 0) {
+            JOptionPane.showMessageDialog(this, "No hay restricciones válidas ingresadas.");
+            return;
+        }
+
+        int totalColumnas = numVariables + numRestricciones;
+        double[][] tabla = new double[numRestricciones + 1][totalColumnas + 1];
+        String[] basicas = new String[numRestricciones]; // ← variables básicas
+
+        // ----------------------------------------
+        // LLENAR RESTRICCIONES
+        // ----------------------------------------
+        int filaIdx = 0;
+        for (int i = 0; i < restricciones.length; i++) {
+            String r = restricciones[i];
+            if (r == null || r.isEmpty()) continue;
+            r = r.toLowerCase().replaceAll("\\s+", "");
+            r = r.replace("<=", "=");
+            String[] lados = r.split("=");
+            if (lados.length < 2) {
+                JOptionPane.showMessageDialog(this, "Formato inválido: " + restricciones[i]);
+                return;
+            }
+
+            String izquierda = lados[0];
+            double derecha = Double.parseDouble(lados[1]);
+
+            java.util.regex.Matcher mt = java.util.regex.Pattern.compile("([+-]?\\d*\\.?\\d*)x(\\d+)").matcher(izquierda);
+            while (mt.find()) {
+                String cs = mt.group(1);
+                if (cs == null || cs.isEmpty() || cs.equals("+")) cs = "1";
+                else if (cs.equals("-")) cs = "-1";
+                double coef = Double.parseDouble(cs);
+                int varIdx = Integer.parseInt(mt.group(2)) - 1;
+                tabla[filaIdx][varIdx] = coef;
+            }
+
+            tabla[filaIdx][numVariables + filaIdx] = 1; // variable de holgura
+            tabla[filaIdx][totalColumnas] = derecha;
+            basicas[filaIdx] = "X" + (numVariables + filaIdx + 1); // nombre de variable básica inicial
+            filaIdx++;
+        }
+
+        // ----------------------------------------
+        // FILA Z
+        // ----------------------------------------
+        for (int i = 0; i < numVariables; i++) {
+            tabla[numRestricciones][i] = -coefZ.get(i);
+        }
+
+        // ----------------------------------------
+        // SIMPLEX ITERACIONES
+        // ----------------------------------------
+        int iter = 1;
+        double[][] tablaActual = tabla;
+
+        while (true) {
+            // Mostrar iteración
+            JLabel titulo = new JLabel("Iteración " + iter);
+            titulo.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
+            panelInterno.add(titulo);
+
+            // Encabezados
+            String[] columnas = new String[totalColumnas + 3];
+            columnas[0] = "Variables Básicas";
+            columnas[1] = "Ecuación";
+            columnas[2] = "Z";
+            for (int c = 0; c < totalColumnas; c++) columnas[c + 3] = "X" + (c + 1);
+            columnas[columnas.length - 1] = "Lado Derecho";
+
+            Object[][] datos = new Object[numRestricciones + 1][columnas.length];
+            int filaTabla = 0;
+
+            // Fila Z
+            datos[filaTabla][0] = "Z";
+            datos[filaTabla][1] = "0";
+            datos[filaTabla][2] = "1";
+            for (int j = 0; j < totalColumnas; j++) {
+                datos[filaTabla][j + 3] = String.format("%.2f", tablaActual[numRestricciones][j]);
+            }
+            datos[filaTabla][columnas.length - 1] = String.format("%.2f", tablaActual[numRestricciones][totalColumnas]);
+            filaTabla++;
+
+            // Restricciones
+            for (int i = 0; i < numRestricciones; i++) {
+                datos[filaTabla][0] = basicas[i];
+                datos[filaTabla][1] = String.valueOf(i + 1);
+                datos[filaTabla][2] = "0";
+                for (int j = 0; j < totalColumnas; j++) {
+                    datos[filaTabla][j + 3] = String.format("%.2f", tablaActual[i][j]);
+                }
+                datos[filaTabla][columnas.length - 1] = String.format("%.2f", tablaActual[i][totalColumnas]);
+                filaTabla++;
+            }
+
+            JTable table = new JTable(datos, columnas);
+            table.setFillsViewportHeight(true);
+            JScrollPane sp = new JScrollPane(table);
+            sp.setPreferredSize(new Dimension(950, 160));
+            panelInterno.add(sp);
+            panelInterno.add(Box.createVerticalStrut(8));
+
+            // Buscar pivote
+            int colPivote = -1;
+            double menorZ = 0;
+            for (int j = 0; j < totalColumnas; j++) {
+                if (tablaActual[numRestricciones][j] < menorZ) {
+                    menorZ = tablaActual[numRestricciones][j];
+                    colPivote = j;
+                }
+            }
+            if (colPivote == -1) break;
+
+            int filaPivote = -1;
+            double menorRazon = Double.MAX_VALUE;
+            for (int i = 0; i < numRestricciones; i++) {
+                double a = tablaActual[i][colPivote];
+                if (a > 0) {
+                    double razon = tablaActual[i][totalColumnas] / a;
+                    if (razon < menorRazon) {
+                        menorRazon = razon;
+                        filaPivote = i;
+                    }
+                }
+            }
+            if (filaPivote == -1) {
+                JOptionPane.showMessageDialog(this, "No hay solución factible.");
+                return;
+            }
+
+            // Actualizar variable básica
+            basicas[filaPivote] = "X" + (colPivote + 1);
+
+            // Normalizar y eliminar
+            double pivote = tablaActual[filaPivote][colPivote];
+            for (int j = 0; j <= totalColumnas; j++) {
+                tablaActual[filaPivote][j] /= pivote;
+            }
+            for (int i = 0; i < numRestricciones + 1; i++) {
+                if (i == filaPivote) continue;
+                double factor = tablaActual[i][colPivote];
+                for (int j = 0; j <= totalColumnas; j++) {
+                    tablaActual[i][j] -= factor * tablaActual[filaPivote][j];
+                }
+            }
+            iter++;
+        }
+
+        // ----------------------------------------
+        // RESULTADOS
+        // ----------------------------------------
+        double zMax = tablaActual[numRestricciones][totalColumnas];
+        StringBuilder sb = new StringBuilder();
+        sb.append("Z = ").append(String.format("%.2f", zMax)).append("\n");
+
+        double[] valores = new double[numVariables];
+        for (int j = 0; j < numVariables; j++) {
+            double valor = 0;
+            for (int i = 0; i < numRestricciones; i++) {
+                if (basicas[i].equalsIgnoreCase("X" + (j + 1))) {
+                    valor = tablaActual[i][totalColumnas];
+                    break;
+                }
+            }
+            valores[j] = valor;
+            sb.append("X").append(j + 1).append(" = ").append(String.format("%.2f", valor)).append("\n");
+        }
+        txtRespuesta1.setText(sb.toString());
+
+        // Verificación
+        StringBuilder ver = new StringBuilder();
+        ver.append("Z - ");
+        for (int i = 0; i < numVariables; i++) {
+            ver.append(String.format("%.0f", coefZ.get(i))).append("X").append(i + 1);
+            if (i < numVariables - 1) ver.append(" - ");
+        }
+        ver.append(" = 0\n");
+
+        ver.append(String.format("%.0f", zMax)).append(" - ");
+        for (int i = 0; i < numVariables; i++) {
+            ver.append(String.format("%.0f", coefZ.get(i))).append("(").append(String.format("%.2f", valores[i])).append(")");
+            if (i < numVariables - 1) ver.append(" - ");
+        }
+        double sum = 0;
+        for (int i = 0; i < numVariables; i++) sum += coefZ.get(i) * valores[i];
+        ver.append(" = 0\n");
+        ver.append(String.format("%.0f - %.0f = 0\n", zMax, sum));
+        ver.append("0 = 0");
+
+        txtRespuesta2.setText(ver.toString());
+
+        panelInterno.revalidate();
+        panelInterno.repaint();
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        e.printStackTrace();
+    }
+    
+
+                                         
+
     }//GEN-LAST:event_btnMaximizarActionPerformed
+
+    private void txtEcuacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEcuacionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEcuacionActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        txtEcuacion.setText("");
+        txtRespuesta1.setText(""); 
+        txtRespuesta2.setText("");
+        txtRestriccion1.setText("");
+        txtRestriccion2.setText("");
+        txtRestriccion3.setText("");
+        panelInterno.removeAll();
+        panelInterno.revalidate();
+        panelInterno.repaint();
+        
+    }//GEN-LAST:event_btnLimpiarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnMaximizar;
-    private javax.swing.JButton btnMinimizar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JScrollPane jpanelmtd_simplex;
-    private javax.swing.JTextField txtEX1;
-    private javax.swing.JTextField txtEX2;
-    private javax.swing.JTextField txtRS1;
-    private javax.swing.JTextField txtRS2;
-    private javax.swing.JTextField txtRS3;
-    private javax.swing.JTextField txtRX1;
-    private javax.swing.JTextField txtRX2;
-    private javax.swing.JTextField txtRY1;
-    private javax.swing.JTextField txtRY2;
-    private javax.swing.JTextField txtRZ1;
-    private javax.swing.JTextField txtRZ2;
-    private javax.swing.JTextField txtRZ3;
+    public javax.swing.JPanel panelInterno;
+    private javax.swing.JTextField txtEcuacion;
+    private javax.swing.JTextArea txtRespuesta1;
+    private javax.swing.JTextArea txtRespuesta2;
+    private javax.swing.JTextField txtRestriccion1;
+    private javax.swing.JTextField txtRestriccion2;
+    private javax.swing.JTextField txtRestriccion3;
+    private javax.swing.JTextField txtRestriccion4;
     private javax.swing.JTextField txtTipo;
-    private javax.swing.JTextField txtX3;
     // End of variables declaration//GEN-END:variables
 }
