@@ -328,30 +328,36 @@ public class ModeloAsignacion extends javax.swing.JPanel {
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
 
         try {
-            DefaultTableModel modelo = (DefaultTableModel) tblDatos.getModel();
-            int filas = modelo.getRowCount();
-            int columnasTot = modelo.getColumnCount();
+        // 🔹 Resetear variables internas antes de cada cálculo
+        filasMarcadas.clear();
+        columnasMarcadas.clear();
+        asignacionFinal = null;
+        matriz = null;
+        original = null;
 
-            if (columnasTot <= 1 || filas == 0) {
-                JOptionPane.showMessageDialog(this, "No hay datos para procesar.");
-                return;
+        DefaultTableModel modelo = (DefaultTableModel) tblDatos.getModel();
+        int filas = modelo.getRowCount();
+        int columnasTot = modelo.getColumnCount();
+
+        if (columnasTot <= 1 || filas == 0) {
+            JOptionPane.showMessageDialog(this, "No hay datos para procesar.");
+            return;
+        }
+
+        int columnas = columnasTot - 1; // columna 0 es numeración
+
+        matriz = new double[filas][columnas];
+        original = new double[filas][columnas];
+
+        for (int i = 0; i < filas; i++) {
+            for (int j = 1; j <= columnas; j++) {
+                double val = getValorNumerico(modelo.getValueAt(i, j));
+                matriz[i][j - 1] = val;
+                original[i][j - 1] = val;
             }
+        }
 
-            int columnas = columnasTot - 1; // columna 0 es numeración
-
-            // --- crear matrices ---
-            matriz = new double[filas][columnas];
-            original = new double[filas][columnas];
-
-            for (int i = 0; i < filas; i++) {
-                for (int j = 1; j <= columnas; j++) {
-                    double val = getValorNumerico(modelo.getValueAt(i, j));
-                    matriz[i][j - 1] = val;
-                    original[i][j - 1] = val;
-                }
-            }
-
-            // --- 1) Resta por fila ---
+        
             for (int i = 0; i < filas; i++) {
                 double min = Double.MAX_VALUE;
                 for (int j = 0; j < columnas; j++) min = Math.min(min, matriz[i][j]);
@@ -420,12 +426,23 @@ public class ModeloAsignacion extends javax.swing.JPanel {
     }//GEN-LAST:event_txtColumnasActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-          txtResultados.setText("");
-        asignacionFinal = null;
-        filasMarcadas.clear();
-        columnasMarcadas.clear();
-        // no borro la tabla aquí
-        tblDatos.repaint();
+           txtResultados.setText("");
+    asignacionFinal = null;
+    filasMarcadas.clear();
+    columnasMarcadas.clear();
+    matriz = null;
+    original = null;
+
+    DefaultTableModel modelo = (DefaultTableModel) tblDatos.getModel();
+    for (int i = 0; i < modelo.getRowCount(); i++) {
+        for (int j = 1; j < modelo.getColumnCount(); j++) {
+            modelo.setValueAt("", i, j);
+        }
+    }
+
+    tblDatos.setDefaultRenderer(Object.class, new DefaultTableCellRenderer());
+    tblDatos.repaint();
+
 
     }//GEN-LAST:event_btnLimpiarActionPerformed
 

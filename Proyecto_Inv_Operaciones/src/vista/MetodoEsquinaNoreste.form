@@ -438,7 +438,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="btnDF3">
+    <Component class="javax.swing.JButton" name="btnof">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="cc" green="cc" red="cc" type="rgb"/>
@@ -449,7 +449,7 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="47" green="30" red="21" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="DEMANDA FINAL"/>
+        <Property name="text" type="java.lang.String" value="Oferta"/>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
             <EtchetBorder>
@@ -484,7 +484,7 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="47" green="30" red="21" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="FORMA INICIAL"/>
+        <Property name="text" type="java.lang.String" value="Demandas "/>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
             <EtchetBorder>
