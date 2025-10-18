@@ -258,8 +258,8 @@ public class MetodoAproVogel extends javax.swing.JPanel {
         return;
     }
 
-    int m = rows - 1;           // número de suministros (filas), excluyendo la fila Demanda
-    int n = cols - 2;           // número de demandas (columnas), excluyendo col 0 (nombres) y última columna (Oferta)
+    int m = rows - 1;           // número de suministros 
+    int n = cols - 2;           // número de demandas (columnas)
     if (m <= 0 || n <= 0) {
         JOptionPane.showMessageDialog(this, "Dimensiones inválidas en la tabla.");
         return;
@@ -338,7 +338,7 @@ public class MetodoAproVogel extends javax.swing.JPanel {
             n = newN;
             addedDummyCol = true;
         } else {
-            // --- Caso: la demanda > oferta -> agregar fila dummy ---
+            // --- agregar fila
             int newM = m + 1;
             double[][] newCosts = new double[newM][n];
             for (int i = 0; i < m; i++) System.arraycopy(costs[i], 0, newCosts[i], 0, n);
@@ -355,7 +355,7 @@ public class MetodoAproVogel extends javax.swing.JPanel {
         }
     }
 
-    // ----- VAM -----
+    // 
     double[][] allocation = new double[m][n];
     boolean[] rowDone = new boolean[m];
     boolean[] colDone = new boolean[n];
@@ -552,10 +552,7 @@ public class MetodoAproVogel extends javax.swing.JPanel {
             columnModel.getColumn(i).setPreferredWidth(80);  // Demandas
         }
     }
-        // --- Mensaje informativo ---
-        //JOptionPane.showMessageDialog(this,
-            //  "Tabla inicial generada correctamente para el Método de Aproximación de Vogel.\n" +
-            //"Ingrese los costos, la oferta y la demanda para continuar con el cálculo.");*/
+        
 
     }//GEN-LAST:event_btnFIActionPerformed
 

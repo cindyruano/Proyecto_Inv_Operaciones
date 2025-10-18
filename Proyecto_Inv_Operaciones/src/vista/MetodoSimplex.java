@@ -165,9 +165,7 @@ public class MetodoSimplex extends javax.swing.JPanel {
         panelInterno.revalidate();
         panelInterno.repaint();
 
-        // ----------------------------------------
-        // LEER ENTRADAS
-        // ----------------------------------------
+     
         String ecuacion = txtEcuacion.getText().trim();
         String[] restricciones = {
             txtRestriccion1.getText().trim(),
@@ -182,9 +180,6 @@ public class MetodoSimplex extends javax.swing.JPanel {
             }
         }
 
-        // ----------------------------------------
-        // PARSEAR FUNCIÓN OBJETIVO
-        // ----------------------------------------
         String ecuacionOriginal = ecuacion;
         ecuacion = ecuacion.toLowerCase().replace("z=", "").replace("z =", "").trim();
         String[] partesZ = ecuacion.split("(?=[+-])");
@@ -221,9 +216,7 @@ public class MetodoSimplex extends javax.swing.JPanel {
         double[][] tabla = new double[numRestricciones + 1][totalColumnas + 1];
         String[] basicas = new String[numRestricciones]; // ← variables básicas
 
-        // ----------------------------------------
-        // LLENAR RESTRICCIONES
-        // ----------------------------------------
+      
         int filaIdx = 0;
         for (int i = 0; i < restricciones.length; i++) {
             String r = restricciones[i];
@@ -255,16 +248,11 @@ public class MetodoSimplex extends javax.swing.JPanel {
             filaIdx++;
         }
 
-        // ----------------------------------------
-        // FILA Z
-        // ----------------------------------------
+       
         for (int i = 0; i < numVariables; i++) {
             tabla[numRestricciones][i] = -coefZ.get(i);
         }
 
-        // ----------------------------------------
-        // SIMPLEX ITERACIONES
-        // ----------------------------------------
         int iter = 1;
         double[][] tablaActual = tabla;
 
@@ -360,9 +348,8 @@ public class MetodoSimplex extends javax.swing.JPanel {
             iter++;
         }
 
-        // ----------------------------------------
         // RESULTADOS
-        // ----------------------------------------
+       
         double zMax = tablaActual[numRestricciones][totalColumnas];
         StringBuilder sb = new StringBuilder();
         sb.append("Z = ").append(String.format("%.2f", zMax)).append("\n");
