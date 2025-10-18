@@ -339,7 +339,7 @@ public class MetodoAproVogel extends javax.swing.JPanel {
                 costs = newCosts;
                 demand = newDemand;
                 colNames = Arrays.copyOf(colNames, newN);
-                colNames[newN - 1] = "Demanda_dummy";
+                colNames[newN - 1] = "Demanda_nueva";
                 n = newN;
                 addedDummyCol = true;
             } else {
@@ -354,7 +354,7 @@ public class MetodoAproVogel extends javax.swing.JPanel {
                 costs = newCosts;
                 supply = newSupply;
                 rowNames = Arrays.copyOf(rowNames, newM);
-                rowNames[newM - 1] = "Suministro DF";
+                rowNames[newM - 1] = " DF";
                 m = newM;
                 addedDummyRow = true;
             }
