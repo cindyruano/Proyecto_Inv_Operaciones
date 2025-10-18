@@ -67,7 +67,7 @@ public class ControladorAsignacion implements MouseListener {
                 modeloTabla.setColumnIdentifiers(generarColumnas(n));
             }
             vista.tblDatos.setModel(modeloTabla);
-            vista.txtResultados.setText("Se creó una tabla de " + n + "x" + n);
+           
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "Ingrese un número válido.");
         }

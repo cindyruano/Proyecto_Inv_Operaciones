@@ -329,6 +329,7 @@ while (i < filas && j < columnas) {
 }
 
 // Calcular costo total
+// Calcular costo total
 int costoTotal = 0;
 for (i = 0; i < filas; i++) {
     for (j = 0; j < columnas; j++) {
@@ -337,9 +338,7 @@ for (i = 0; i < filas; i++) {
 }
 
 StringBuilder solucion = new StringBuilder();
-solucion.append(" Solución del Método Esquina Noroeste:\n\n");
-
-
+//solucion.append(" Solución del Método Esquina Noroeste:\n\n");
 
 for (i = 0; i < filas; i++) {
     for (j = 0; j < columnas; j++) {
@@ -347,19 +346,15 @@ for (i = 0; i < filas; i++) {
             int cantidad = asignaciones[i][j];
             int costoUnitario = costos[i][j];
             int subtotal = cantidad * costoUnitario;
-            costoTotal += subtotal;
 
-            solucion.append(String.format("S%d - D%d: %d × %d = %d%n", 
-                    (i + 1), (j + 1), cantidad, costoUnitario, subtotal));
+            
+            solucion.append(String.format("S%d -> %d * %d = %d%n",
+                    (i + 1), cantidad, costoUnitario, subtotal));
         }
     }
 }
 
-solucion.append("\n------------------------\n");
-solucion.append(String.format(" Costo total = %d", costoTotal));
-
 Resultados.setText(solucion.toString());
-
 txtRespuesta.setText(String.valueOf(costoTotal));
 
     }//GEN-LAST:event_btnCalcularActionPerformed
