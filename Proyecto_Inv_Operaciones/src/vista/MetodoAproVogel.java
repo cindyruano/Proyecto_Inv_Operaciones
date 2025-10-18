@@ -360,7 +360,7 @@ public class MetodoAproVogel extends javax.swing.JPanel {
             }
         }
 
-        // ----- VAM (Vogel Approximation Method) -----
+        // ----- VAM
         double[][] allocation = new double[m][n];
         boolean[] rowDone = new boolean[m];
         boolean[] colDone = new boolean[n];
@@ -463,8 +463,9 @@ public class MetodoAproVogel extends javax.swing.JPanel {
             }
         }
 
-        sb.append("\n");
-        sb.append(String.format("Costo total: %.2f\n", totalCost));
+        //sb.append("\n");
+        Resultados.append("\n");
+        //sb.append(String.format("Costo total: %.2f\n", totalCost));
         if (addedDummyCol || addedDummyRow) {
             sb.append("\n(Se balanceó para igualar la oferta y demanda)\n");
         }
