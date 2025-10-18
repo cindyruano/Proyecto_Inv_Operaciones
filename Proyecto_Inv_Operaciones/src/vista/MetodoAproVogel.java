@@ -451,8 +451,8 @@ public class MetodoAproVogel extends javax.swing.JPanel {
 
         // ----- Construir texto de salida -----
         StringBuilder sb = new StringBuilder();
-        sb.append(     "RESULTADOS - \n\n");
-        sb.append(String.format(    "Asignación:\n\n"));
+        //sb.append(     "RESUL \n\n");
+        //sb.append(String.format(    "Asignación:\n\n"));
 
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
